@@ -1,29 +1,68 @@
 <template>
-  <div id="geEditor">dddddddddddddddddddd</div>
+  <div id="graphContainer"></div>
 </template>
 
 <script>
-  import {urlParams,mxLoadResources} from '../../static/js/index_view_begin'
-  import Init from '../../static/js/Init'
-  import deflate_pako from '../../static/deflate/pako.min'
-  import {Base64} from '../../static/deflate/base64'
-  import {jscolor} from '../../static/jscolor/jscolor'
-  import sanitizer_sanitizer from '../../static/sanitizer/sanitizer.min'
-  import {mxClient} from '../../static/js/mxClient'
-  import {EditorUi} from '../../static/js/EditorUi'
+  import mxgraph from '../router/index2.js';
+  const {mxGraph, mxClient, mxCodec, mxUtils, mxConstants, mxPerimeter} = mxgraph;
 
-  import {Editor} from '../../static/js/Editor'
-  import {Sidebar} from '../../static/js/Sidebar'
-  import {Graph} from '../../static/js/Graph'
-  import {Format} from '../../static/js/Format'
-  import {Shapes} from '../../static/js/Shapes'
-  import {Actions} from '../../static/js/Actions'
-  import {Menus} from '../../static/js/Menus'
-  import {Toolbar} from '../../static/js/Toolbar'
-  import {OpenDialog} from '../../static/js/Dialogs'
+  export default {
+    name: 'index_view',
+    props: {
+      msg: String
+    },
+    mounted() {
+      if (!mxClient.isBrowserSupported()) {
+        // 判断是否支持mxgraph
+        mxUtils.error('Browser is not supported!', 200, false);
+      } else {
+        // 再容器中创建图表
+        let container = document.getElementById('graphContainer');
+        let MxGraph = mxGraph;
+        let MxCodec = mxCodec;
+        var graph = new MxGraph(container);
+        // 生成 Hello world!
+        var parent = graph.getDefaultParent();
+        graph.getModel().beginUpdate();
+        try {
+          var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 200, 80, 30);
+          var v2 = graph.insertVertex(parent, null, 'World', 200, 150, 80, 30);
+          var v3 = graph.insertVertex(parent, null, 'everyBody!', 300, 350, 60, 60);
+          graph.insertEdge(parent, null, '', v1, v2);
+          graph.insertEdge(parent, null, '', v2, v3);
+          graph.insertEdge(parent, null, '', v1, v3);
+        } finally {
+          // Updates the display
+          graph.getModel().endUpdate();
+        }
+        // 打包XML文件
+        let encoder = new MxCodec();
+        let xx = encoder.encode(graph.getModel());
+        // 保存到getXml参数中
+        this.getXml = mxUtils.getXml(xx);
+      }
 
-  $(function () {
-
-  })
-
+    }
+  };
 </script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+  h3 {
+    margin: 40px 0 0;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  li {
+    display: inline-block;
+    margin: 0 10px;
+  }
+
+  a {
+    color: #42b983;
+  }
+</style>

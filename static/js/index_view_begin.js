@@ -22,7 +22,7 @@ var urlParams = (function(url)
 })(window.location.href);
 
 // Default resources are included in grapheditor resources
-var mxLoadResources = false;
+
 export {
-  urlParams,mxLoadResources
+  urlParams
 }

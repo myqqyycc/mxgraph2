@@ -10,6 +10,9 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "exports-loader": "^0.7.0",
+    "mxgraph": "^3.9.12",
+    "script-loader": "^0.7.2",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
