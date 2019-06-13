@@ -1,0 +1,112 @@
+<template>
+  <div id="graphContainer"></div>
+</template>
+
+<script>
+  import mxgraph from '../router/index2.js';
+
+  import Graph from '../../static/js/Graph';
+  const {mxGraph, mxClient, mxCodec, mxUtils, mxConstants, mxPerimeter} = mxgraph;
+  import MyViewGraph from './viewInit';
+  import '../../static/styles/grapheditor.css';
+  import '../../static/styles/common.css';
+
+  var graph
+
+  export default {
+    name: 'index_view1',
+    props: {
+      msg: String
+    },
+    mounted() {
+      if (!mxClient.isBrowserSupported()) {
+        // 判断是否支持mxgraph
+        mxUtils.error('Browser is not supported!', 200, false);
+      } else {
+        // 再容器中创建图表
+        let container = document.getElementById('graphContainer');
+        let MxGraph = mxGraph;
+        let MxCodec = mxCodec;
+        var xml ='<mxGraphModel dx="1634" dy="393" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169"><root><mxCell id="0"/><mxCell id="1" parent="0"/><object label="" param="333" id="3"><mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1"><mxGeometry x="510" y="370" width="40" height="40" as="geometry"/></mxCell></object><object label="" param="7" id="7"><mxCell style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4" target="5"><mxGeometry relative="1" as="geometry"/></mxCell></object><object label="" param="11" id="11"><mxCell style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="4" target="9"><mxGeometry relative="1" as="geometry"/></mxCell></object><object label="开始" param="begin" id="4"><mxCell style="triangle;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="60" y="210" width="60" height="80" as="geometry"/></mxCell></object><object label="" param="8" id="8"><mxCell style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="5" target="6"><mxGeometry relative="1" as="geometry"/></mxCell></object><object label="节点1" param="节点5" id="5"><mxCell style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="280" y="230" width="80" height="40" as="geometry"/></mxCell></object><object label="节点2" param="ddd" id="6"><mxCell style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="490" y="230" width="80" height="40" as="geometry"/></mxCell></object><object label="节点3" param="99" id="9"><mxCell style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="280" y="370" width="80" height="40" as="geometry"/></mxCell></object><object label="" param="10" id="10"><mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1"><mxGeometry x="510" y="460" width="40" height="40" as="geometry"/></mxCell></object><object label="" param="14" id="14"><mxCell style="endArrow=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="9" target="3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="60" y="570" as="sourcePoint"/><mxPoint x="110" y="520" as="targetPoint"/></mxGeometry></mxCell></object><object label="" id="15"><mxCell style="endArrow=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="10" target="9"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="330" y="540" as="sourcePoint"/><mxPoint x="380" y="490" as="targetPoint"/></mxGeometry></mxCell></object></root></mxGraphModel>'
+
+         graph  = new MyViewGraph(container,xml);
+        graph.getChildCells().forEach(function (cell) {
+          var num=0;
+          var cellInterval=setInterval(function () {
+            if(cell.isEdge()){
+              if (cell.value != null && typeof(cell.value) == 'object'&& cell.value.hasAttribute("param")){
+                mxUtils.setCellStyles(graph.getModel(), [cell], "strokeColor", getColor());
+                num+=Math.round(Math.random()*100);
+                num=num%100;
+
+                cell.value.setAttribute("label",num+"%")
+              }
+
+            }else {
+              mxUtils.setCellStyles(graph.getModel(), [cell], "fillColor", getColor());
+            }
+            initTooltipStr(cell,default_tooltip_arr);
+          },3000)
+        });
+
+      }
+
+    }
+  };
+  var defaultColors=['none', 'FFFFFF', 'E6E6E6', 'CCCCCC', 'B3B3B3', '999999', '808080', '666666', '4D4D4D', '333333', '1A1A1A', '000000', 'FFCCCC', 'FFE6CC', 'FFFFCC', 'E6FFCC', 'CCFFCC', 'CCFFE6', 'CCFFFF', 'CCE5FF', 'CCCCFF', 'E5CCFF', 'FFCCFF', 'FFCCE6',
+    'FF9999', 'FFCC99', 'FFFF99', 'CCFF99', '99FF99', '99FFCC', '99FFFF', '99CCFF', '9999FF', 'CC99FF', 'FF99FF', 'FF99CC', 'FF6666', 'FFB366', 'FFFF66', 'B3FF66', '66FF66', '66FFB3', '66FFFF', '66B2FF', '6666FF', 'B266FF', 'FF66FF', 'FF66B3', 'FF3333', 'FF9933', 'FFFF33',
+    '99FF33', '33FF33', '33FF99', '33FFFF', '3399FF', '3333FF', '9933FF', 'FF33FF', 'FF3399', 'FF0000', 'FF8000', 'FFFF00', '80FF00', '00FF00', '00FF80', '00FFFF', '007FFF', '0000FF', '7F00FF', 'FF00FF', 'FF0080', 'CC0000', 'CC6600', 'CCCC00', '66CC00', '00CC00', '00CC66',
+    '00CCCC', '0066CC', '0000CC', '6600CC', 'CC00CC', 'CC0066', '990000', '994C00', '999900', '4D9900', '009900', '00994D', '009999', '004C99', '000099', '4C0099', '990099', '99004D', '660000', '663300', '666600', '336600', '006600', '006633', '006666', '003366', '000066',
+    '330066', '660066', '660033', '330000', '331A00', '333300', '1A3300', '003300', '00331A', '003333', '001933', '000033', '190033', '330033', '33001A'];;
+
+  var default_tooltip_arr=[{name:"节点名",value:"label"},{name:"参数",value:"param"}];
+
+
+
+  //    graph.getModel().getCell(5).setTooltipContent("dddddd")
+  function getColor() {
+    var color=defaultColors[Math.round(Math.random()*100%defaultColors.length)];
+    if(color!='none'){
+      return '#'+color;
+    }
+    return color;
+  }
+  setInterval(function () {
+    if($(".mxTooltip").html()!=''){
+      console.log( $(".mxTooltip").html())
+    }
+  },1000)
+
+
+  function initTooltipStr(cell,arr){
+    var prefix="<table>";
+    var endStr="</table>",content="";
+    if(cell&&cell.value&&arr.length>0){
+      arr.forEach(function (obj) {
+        content+="<tr><td>" +obj.name+":</td><td>" +(cell.value.hasAttribute(obj.value)?cell.value.getAttribute(obj.value):"")+"</td></tr>"
+      })
+    }
+    return graph.setTooltipForCell(cell,prefix+content+endStr);
+  }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+  h3 {
+    margin: 40px 0 0;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  li {
+    display: inline-block;
+    margin: 0 10px;
+  }
+
+  a {
+    color: #42b983;
+  }
+</style>
